@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fuluus Exchange - Instant Currency Exchange & Transfers</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        }
+
+        :root {
+            --primary-green: #4C8C4A;
+            --dark-green: #3d703b;
+            --mint-bg: #E9F5E9;
+            --lime-accent: #BADA55;
+            --peach-accent: #FFB5A0;
+            --dark-bg: #0f1419;
+            --card-bg: #ffffff;
+            --text-primary: #202124;
+            --text-secondary: #5f6368;
+            --border-color: #dadce0;
+            --shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            --shadow-hover: 0 8px 24px rgba(0, 0, 0, 0.12);
+        }
+
+        body {
+            background-color: #f8f9fa;
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        /* Animated Background */
+        .animated-bg {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            overflow: hidden;
+            pointer-events: none;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            opacity: 0.1;
+            animation: float 20s infinite ease-in-out;
+        }
+
+        .bg-circle:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            background: var(--primary-green);
+            top: 10%;
+            left: -150px;
+            animation-delay: 0s;
+        }
+
+        .bg-circle:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            background: var(--lime-accent);
+            top: 50%;
+            right: -100px;
+            animation-delay: 5s;
+        }
+
+        .bg-circle:nth-child(3) {
+            width: 400px;
+            height: 400px;
+            background: var(--peach-accent);
+            bottom: 10%;
+            left: 20%;
+            animation-delay: 10s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0) scale(1); }
+            33% { transform: translate(30px, -30px) scale(1.1); }
+            66% { transform: translate(-20px, 20px) scale(0.9); }
+        }
+
+        /* Header */
+        header {
+            padding: 20px 0;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border-color);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 15px;
+            background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .logo-icon::after {
+            content: "";
+            position: absolute;
+            width: 25px;
+            height: 25px;
+            background-color: rgba(255, 255, 255, 0.2);
+            border-radius: 50%;
+            top: -8px;
+            right: -8px;
+        }
+
+        .logo-icon i {
+            font-size: 24px;
+            color: white;
+            z-index: 2;
+        }
+
+        .app-name {
+            font-size: 28px;
+            font-weight: 700;
+            color: var(--text-primary);
+            letter-spacing: -0.5px;
+        }
+
+        .app-name span {
+            color: var(--primary-green);
+        }
+
+        /* Hero Section - Enhanced */
+        .hero {
+            padding: 80px 0 100px;
+            background: linear-gradient(135deg, #f8f9fa 0%, var(--mint-bg) 50%, rgba(255, 181, 160, 0.1) 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero-content {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+        }
+
+        .hero-text h1 {
+            font-size: 3.2rem;
+            font-weight: 800;
+            line-height: 1.15;
+            margin-bottom: 20px;
+            color: var(--text-primary);
+            background: linear-gradient(135deg, var(--text-primary), var(--primary-green));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero-subtitle {
+            font-size: 1.3rem;
+            color: var(--text-secondary);
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .download-buttons {
+            display: flex;
+            gap: 16px;
+            margin-top: 40px;
+        }
+
+        .download-btn {
+            display: flex;
+            align-items: center;
+            padding: 16px 28px;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            box-shadow: var(--shadow);
+            min-width: 200px;
+        }
+
+        .download-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .download-btn.ios {
+            background: linear-gradient(135deg, #000, #333);
+            color: white;
+        }
+
+        .download-btn.android {
+            background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+            color: white;
+        }
+
+        .download-btn i {
+            font-size: 28px;
+            margin-right: 12px;
+        }
+
+        .btn-text {
+            display: flex;
+            flex-direction: column;
+            text-align: left;
+        }
+
+        .btn-text span:first-child {
+            font-size: 0.75rem;
+            opacity: 0.9;
+            margin-bottom: 2px;
+        }
+
+        .btn-text span:last-child {
+            font-size: 1.1rem;
+        }
+
+        /* Enhanced Phone Preview */
+        .phone-preview {
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .phone-mockup {
+            width: 320px;
+            height: 650px;
+            background: linear-gradient(135deg, var(--peach-accent), #FFD5C8);
+            border-radius: 50px;
+            padding: 20px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.2);
+            position: relative;
+            animation: phoneFloat 6s ease-in-out infinite;
+        }
+
+        @keyframes phoneFloat {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+
+        .phone-screen {
+            width: 100%;
+            height: 100%;
+            background: white;
+            border-radius: 40px;
+            overflow: hidden;
+            box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .app-interface {
+            padding: 30px 20px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .interface-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 30px;
+        }
+
+        .interface-logo {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--primary-green);
+        }
+
+        .interface-menu i {
+            font-size: 24px;
+            color: var(--text-secondary);
+        }
+
+        .balance-display {
+            background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+            border-radius: 20px;
+            padding: 25px;
+            color: white;
+            margin-bottom: 25px;
+            box-shadow: 0 8px 16px rgba(76, 140, 74, 0.3);
+        }
+
+        .balance-label {
+            font-size: 13px;
+            opacity: 0.9;
+            margin-bottom: 8px;
+        }
+
+        .balance-value {
+            font-size: 36px;
+            font-weight: 700;
+        }
+
+        .quick-actions {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .action-card {
+            background: var(--mint-bg);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid rgba(76, 140, 74, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .action-card:hover {
+            transform: scale(1.05);
+            box-shadow: var(--shadow);
+        }
+
+        .action-icon {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 10px;
+            color: white;
+            font-size: 20px;
+        }
+
+        .action-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        /* Payment Partners Section */
+        .payment-partners {
+            padding: 80px 0;
+            background: white;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .section-subtitle {
+            text-align: center;
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            max-width: 700px;
+            margin: 0 auto 50px;
+        }
+
+        .partners-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 30px;
+            margin-top: 50px;
+        }
+
+        .partner-card {
+            background: var(--mint-bg);
+            border-radius: 20px;
+            padding: 30px;
+            text-align: center;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .partner-card:hover {
+            border-color: var(--primary-green);
+            transform: translateY(-5px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .partner-name {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: var(--primary-green);
+            margin-bottom: 10px;
+        }
+
+        .partner-type {
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        /* Features Section */
+        .features {
+            padding: 80px 0;
+            background: linear-gradient(135deg, var(--mint-bg) 0%, #f8f9fa 100%);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 40px;
+            margin-top: 50px;
+        }
+
+        .feature-card {
+            background: white;
+            border-radius: 20px;
+            padding: 35px 25px;
+            text-align: center;
+            border: 1px solid rgba(76, 140, 74, 0.1);
+            transition: all 0.4s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card::before {
+            content: "";
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-green), var(--lime-accent));
+            transform: scaleX(0);
+            transition: transform 0.4s ease;
+        }
+
+        .feature-card:hover::before {
+            transform: scaleX(1);
+        }
+
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .feature-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 20px;
+            color: white;
+            font-size: 32px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+        }
+
+        .feature-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        /* CTA Section */
+        .cta-section {
+            padding: 100px 0;
+            background: linear-gradient(135deg, var(--primary-green), var(--dark-green));
+            color: white;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .cta-section::before {
+            content: "";
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 70%);
+            top: -250px;
+            right: -250px;
+        }
+
+        .cta-section h2 {
+            font-size: 3rem;
+            margin-bottom: 20px;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-section p {
+            font-size: 1.3rem;
+            margin-bottom: 40px;
+            opacity: 0.95;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-buttons {
+            display: flex;
+            gap: 20px;
+            justify-content: center;
+            position: relative;
+            z-index: 2;
+        }
+
+        .cta-btn {
+            padding: 18px 40px;
+            border-radius: 14px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+
+        .cta-btn.primary {
+            background: white;
+            color: var(--primary-green);
+        }
+
+        .cta-btn.secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Footer */
+        footer {
+            background: var(--dark-bg);
+            color: white;
+            padding: 60px 0 30px;
+        }
+
+        .footer-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr 1fr 1fr;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+
+        .footer-brand {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .footer-app-name {
+            font-size: 24px;
+            font-weight: 700;
+        }
+
+        .footer-app-name span {
+            color: var(--lime-accent);
+        }
+
+        .footer-desc {
+            color: #9aa0a6;
+            line-height: 1.6;
+        }
+
+        .footer-links {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .footer-links h4 {
+            margin-bottom: 10px;
+            color: white;
+        }
+
+        .footer-links a {
+            color: #9aa0a6;
+            text-decoration: none;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: white;
+        }
+
+        .copyright {
+            text-align: center;
+            padding-top: 30px;
+            border-top: 1px solid #3c4043;
+            color: #9aa0a6;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 1024px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            
+            .download-buttons {
+                justify-content: center;
+            }
+            
+            .phone-preview {
+                margin-top: 40px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .hero-text h1 {
+                font-size: 2.5rem;
+            }
+            
+            .download-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .download-btn {
+                width: 100%;
+                max-width: 300px;
+            }
+            
+            .phone-mockup {
+                width: 280px;
+                height: 570px;
+            }
+            
+            .features-grid, .partners-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .cta-section h2 {
+                font-size: 2rem;
+            }
+            
+            .cta-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Animated Background -->
+    <div class="animated-bg">
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+        <div class="bg-circle"></div>
+    </div>
+
+    <!-- Header -->
+    <header>
+        <div class="container header-content">
+            <div class="logo-container">
+                <div class="logo-icon">
+                    <i class="fas fa-exchange-alt"></i>
+                </div>
+                <h1 class="app-name">Fuluus<span>Exchange</span></h1>
+            </div>
+            <a href="#download" class="download-btn android" style="min-width: auto; padding: 12px 24px;">
+                <i class="fab fa-google-play"></i>
+                <div class="btn-text">
+                    <span>GET IT ON</span>
+                    <span>Play Store</span>
+                </div>
+            </a>
+        </div>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="container hero-content">
+            <div class="hero-text">
+                <h1>Instant Currency Exchange & Transfers</h1>
+                <p class="hero-subtitle">The fastest, most secure way to exchange between EVCPlus, Sahal, Golis, 1xBet, LinBet and more. Your money moved in seconds.</p>
+                
+                <div class="download-buttons" id="download">
+                    <a href="https://fuluus-exchange.somaliex.com/myapp#home" class="download-btn ios">
+                        <i class="fab fa-apple"></i>
+                        <div class="btn-text">
+                            <span>DOWNLOAD ON THE</span>
+                            <span>App Store</span>
+                        </div>
+                    </a>
+                    
+                    <a href="https://play.google.com/store/apps/details?id=so.fuluusexchange.app" class="download-btn android" target="_blank">
+                        <i class="fab fa-google-play"></i>
+                        <div class="btn-text">
+                            <span>GET IT ON</span>
+                            <span>Google Play</span>
+                        </div>
+                    </a>
+                </div>
+            </div>
+            
+            <!-- Enhanced Phone Preview -->
+            <div class="phone-preview">
+                <div class="phone-mockup">
+                    <div class="phone-screen">
+                        <div class="app-interface">
+                            <div class="interface-header">
+                                <div class="interface-logo">Fuluus</div>
+                                <div class="interface-menu">
+                                    <i class="material-icons">menu</i>
+                                </div>
+                            </div>
+                            
+                            <div class="balance-display">
+                                <div class="balance-label">Available Balance</div>
+                                <div class="balance-value">$1,250.75</div>
+                            </div>
+                            
+                            <div class="quick-actions">
+                                <div class="action-card">
+                                    <div class="action-icon">
+                                        <i class="material-icons">swap_calls</i>
+                                    </div>
+                                    <div class="action-label">Exchange</div>
+                                </div>
+                                <div class="action-card">
+                                    <div class="action-icon">
+                                        <i class="material-icons">send</i>
+                                    </div>
+                                    <div class="action-label">Transfer</div>
+                                </div>
+                                <div class="action-card">
+                                    <div class="action-icon">
+                                        <i class="material-icons">add_circle</i>
+                                    </div>
+                                    <div class="action-label">Top Up</div>
+                                </div>
+                                <div class="action-card">
+                                    <div class="action-icon">
+                                        <i class="material-icons">account_balance_wallet</i>
+                                    </div>
+                                    <div class="action-label">Withdraw</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Payment Partners -->
+    <section class="payment-partners">
+        <div class="container">
+            <h2 class="section-title">Payment Methods</h2>
+            <p class="section-subtitle">Connect with all your favorite platforms seamlessly</p>
+            
+            <div class="partners-grid">
+                <div class="partner-card">
+                    <div class="partner-name">BETWINNER</div>
+                    <div class="partner-type">Gaming Platform</div>
+                </div>
+                <div class="partner-card">
+                    <div class="partner-name">LINBET</div>
+                    <div class="partner-type">Sports Betting</div>
+                </div>
+                <div class="partner-card">
+                    <div class="partner-name">MELBET</div>
+                    <div class="partner-type">Gaming Platform</div>
+                </div>
+                <div class="partner-card">
+                    <div class="partner-name">1XBET</div>
+                    <div class="partner-type">Sports Betting</div>
+                </div>
+                <div class="partner-card">
+                    <div class="partner-name">EVC PLUS</div>
+                    <div class="partner-type">Mobile Money</div>
+                </div>
+                <div class="partner-card">
+                    <div class="partner-name">Golis Sahal</div>
+                    <div class="partner-type">Telecom Service</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <div class="container">
+            <h2 class="section-title">Why Choose Us</h2>
+            <p class="section-subtitle">Experience the most reliable currency exchange platform designed for speed, security, and global accessibility</p>
+            
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="material-icons">bolt</i>
+                    </div>
+                    <h3>Instant Transactions</h3>
+                    <p>Lightning-fast currency exchanges and transfers completed in seconds, not hours. Our advanced infrastructure ensures your money moves at the speed of light.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="material-icons">verified_user</i>
+                    </div>
+                    <h3>Secure Platform</h3>
+                    <p>Your security is our top priority with end-to-end encryption and two-factor authentication. We don't collect unnecessary data and never share your info with third parties.</p>
+                </div>
+                
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="material-icons">devices</i>
+                    </div>
+                    <h3>Multiple Platforms</h3>
+                    <p>Access Fuluus on any device - smartphone, tablet, or computer. Seamlessly sync across iOS, Android, and web browsers for ultimate convenience.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA Section -->
+    <section class="cta-section">
+        <div class="container">
+            <h2>Ready to Get Started?</h2>
+            <p>Join thousands of users who trust Fuluus Exchange for instant currency transfers</p>
+            <div class="cta-buttons">
+                <a href="https://play.google.com/store/apps/details?id=so.fuluusexchange.app" class="cta-btn primary" target="_blank">Download Now</a>
+                <a href="#" class="cta-btn secondary">Learn More</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div>
+                    <div class="footer-brand">
+                        <div class="logo-icon" style="width: 40px; height: 40px;">
+                            <i class="fas fa-exchange-alt" style="font-size: 20px;"></i>
+                        </div>
+                        <div class="footer-app-name">Fuluus<span>Exchange</span></div>
+                    </div>
+                    <p class="footer-desc">Securely bridging the gap between local currencies and global financial platforms with instant exchanges, transfers, and accessibility.</p>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>PRODUCT</h4>
+                    <a href="#">Features</a>
+                    <a href="#">Platforms</a>
+                    <a href="#">Pricing</a>
+                    <a href="#">Security</a>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>RESOURCES</h4>
+                    <a href="#">Help Center</a>
+                    <a href="#">API Docs</a>
+                    <a href="#">Safety</a>
+                    <a href="#">Status</a>
+                </div>
+                
+                <div class="footer-links">
+                    <h4>LEGAL</h4>
+                    <a href="#">Privacy</a>
+                    <a href="#">Terms</a>
+                    <a href="#">Compliance</a>
+                    <a href="#">Licenses</a>
+                </div>
+            </div>
+            
+            <div class="copyright">
+                <p>&copy; 2023 Fuluus Exchange. All rights reserved.</p>
+                <p style="margin-top: 8px;">Instant currency exchange and fund transfer platform.</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                }
+            });
+        });
+
+        // Intersection Observer for scroll animations
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = 'translateY(0)';
+                }
+            });
+        }, observerOptions);
+
+        // Observe all cards
+        
